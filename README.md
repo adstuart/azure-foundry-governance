@@ -15,12 +15,17 @@ The comparison evaluates trade-offs across operational, security, networking, an
 
 A single Azure AI Foundry resource shared across environments, teams, or workloads.
 
-Subscription
-└─ Resource Group
-└─ Azure AI Foundry
-├─ Models
-├─ Agents
-└─ Projects
+```text
+Central AI Subscription
+└── Resource Group
+    └── Azure AI Foundry
+        ├── Models
+        ├── Agents
+        └── Projects
+            └── Central AI Project
+            └── BU A Project
+            └── BU B Project
+```
 
 ### Advantages
 
@@ -40,20 +45,28 @@ Subscription
 
 Multiple Azure AI Foundry resources separated by environment, workload, or team.
 
-Subscription
-└─ Resource Group
-├─ Azure AI Foundry (Customer Support Agents)
-│ ├─ Models
-│ ├─ Agents
-│ └─ Projects
-├─ Azure AI Foundry (Document Processing)
-│ ├─ Models
-│ ├─ Agents
-│ └─ Projects
-└─ Azure AI Foundry (Internal Productivity)
-├─ Models
-├─ Agents
-└─ Projects
+```text
+Central AI Subscription
+└── Resource Group
+    └── Azure AI Foundry
+        ├── Models
+        ├── Agents
+        └── Projects
+     
+BU A Subscription
+└── Resource Group
+    └── Azure AI Foundry
+        ├── Models
+        ├── Agents
+        └── Projects
+
+BU B Subscription
+└── Resource Group
+    └── Azure AI Foundry
+        ├── Models
+        ├── Agents
+        └── Projects
+```
 
 ### Advantages
 
