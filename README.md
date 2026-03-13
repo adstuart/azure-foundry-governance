@@ -1,5 +1,10 @@
 # Azure AI Foundry Architecture Decision
 
+## To do
+
+PTU sharing
+
+
 ## Decision Topic
 **Single Azure AI Foundry Resource vs Multiple Foundry Resources**
 
