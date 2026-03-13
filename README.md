@@ -7,6 +7,7 @@ This document evaluates the architectural decision between deploying **a single 
 
 The comparison evaluates trade-offs across operational, security, networking, and lifecycle considerations.
 
+This is focused on Foundry as of March 2026. Now the older Foundry with hubs etc. See https://journeyofthegeek.com/2026/02/22/microsoft-foundry-the-evolution-revisited/
 ---
 
 # Options
