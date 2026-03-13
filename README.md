@@ -6,11 +6,13 @@ To explore:
 ## Decision Topic
 **Single Azure AI Foundry Resource vs Multiple Foundry Resources**
 
-This document evaluates the architectural decision between deploying **a single Azure AI Foundry resource** or **multiple Foundry resources** across an environment.
+- This document evaluates the architectural decision between deploying **a single Azure AI Foundry resource** or **multiple Foundry resources** across an environment.
+- In both scenarios it is imagined that the requirements are to accomodate both:
+    - a) a central repositry of models and LLM access governed by central IT
+    - b) areas where individual teams can build out Agent-based workloads
+- The comparison evaluates trade-offs across operational, security, networking, and lifecycle considerations.
 
-The comparison evaluates trade-offs across operational, security, networking, and lifecycle considerations.
-
-This is focused on Foundry as of March 2026. Now the older Foundry with hubs etc. See https://journeyofthegeek.com/2026/02/22/microsoft-foundry-the-evolution-revisited/
+> NB. This is focused on Foundry as of March 2026. Now the older Foundry with hubs etc. See https://journeyofthegeek.com/2026/02/22/microsoft-foundry-the-evolution-revisited/
 
 ---
 
