@@ -37,7 +37,7 @@ Central AI Subscription
 
 - Max 250 projects in a single Foundry resource
 - Single BYOVNet for agents. All agents reside in same Subnet. Increases reliance on VNet Peering and Firewall transit for agent traffic.
-- Disadvantage 3
+- All projects, prior to publishing, share a common managed-identity for agents. (Agents get their own Entra ID if published).
 
 ---
 
@@ -71,7 +71,7 @@ BU B Subscription
 ### Advantages
 
 - 250 projects per Foundry resource
-- Advantage 2
+- Adovcated approach in MS Docs. [Baseline Microsoft Foundry chat reference architecture in an Azure landing zone](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone#:~:text=Instead%2C%20this%20architecture%20treats%20the%20workload%20as%20the%20owner%20of%20the%20Foundry%20resource%2C%20which%20is%20the%20recommended%20approach)
 - Advantage 3
 
 ### Disadvantages
