@@ -1,10 +1,5 @@
 # Azure AI Foundry Architecture Decision
 
-## To do
-
-PTU sharing
-
-
 ## Decision Topic
 **Single Azure AI Foundry Resource vs Multiple Foundry Resources**
 
@@ -35,7 +30,7 @@ Central AI Subscription
 ### Advantages
 
 - Single BYOVNet only requires on /24, less IP required
-- Advantage 2
+- All projects in a single Foundry resource can share a PTU Deployment (could also be a disadvantage if worried about noisey neighbour). Note, PTU Reservations (not deployments) CAN be shared across Foundry resources. In all cases you cannot share PTU deployment/reservation across regions.
 - Advantage 3
 
 ### Disadvantages
