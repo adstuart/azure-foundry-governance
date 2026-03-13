@@ -38,6 +38,12 @@ Central AI Subscription
 - Max 250 projects in a single Foundry resource
 - Single BYOVNet for agents. All agents reside in same Subnet. Increases reliance on VNet Peering and Firewall transit for agent traffic.
 - All projects, prior to publishing, share a common managed-identity for agents. (Agents get their own Entra ID if published).
+- All projects share some Foundry level datastores. This has security and chargeback implicatons and complexity. E.g.
+    - Agent conversations (Cosmos DB) (DB vs container level identity seperation)
+    - Vector Stores (AI Search) (Need to pay special attention to RBAC at Index vs Search resource levels)
+    - Storage Accounts 
+
+
 
 ---
 
