@@ -1,5 +1,8 @@
 # Azure AI Foundry Architecture Decision
 
+To explore:
+- AI / APIM mappings
+
 ## Decision Topic
 **Single Azure AI Foundry Resource vs Multiple Foundry Resources**
 
