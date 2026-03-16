@@ -14,7 +14,7 @@ To explore:
     - b) areas where individual teams can build out Agent-based workloads
 - The comparison evaluates trade-offs across operational, security, networking, and lifecycle considerations.
 
-> NB. This is focused on Foundry as of March 2026. Now the older Foundry with hubs etc. See https://journeyofthegeek.com/2026/02/22/microsoft-foundry-the-evolution-revisited/
+> NB. This is focused on Microsoft Foundry as of March 2026. Not the older AI Foundry with the concept of Hubs etc. See https://journeyofthegeek.com/2026/02/22/microsoft-foundry-the-evolution-revisited/
 
 ---
 
