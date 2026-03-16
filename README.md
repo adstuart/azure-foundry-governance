@@ -1,5 +1,7 @@
 # Azure AI Foundry Architecture Decision
 
+**Work in Progress**
+
 To explore:
 - AI / APIM mappings
 
