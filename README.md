@@ -93,8 +93,15 @@ BU B Subscription
 
 - /24 recommended per VNet in BYOVNet model, run out of IP quickly
 - IP requirement could drive interest in Managed VNet (rather than BYOVNet) and therefore you need to consider how managed VNet hosted agents, reach centralised models (Private endpoints, AI Gateway, Azure Firewall/Managed-VNet etc)
+  - Note that Managed VNet uses one Azure Firewall per instance if using outbound FQDN filtering = cost consideration
 - Disadvantage 2
 - Disadvantage 3
+
+---
+
+# So what should I do?
+
+Conclusiona and recommendations
 
 ---
 
