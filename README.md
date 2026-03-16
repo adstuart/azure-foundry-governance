@@ -3,7 +3,7 @@
 **Work in Progress**
 
 To explore:
-- AI / APIM mappings
+- AI Gateway / APIM mapping implications.
 
 ## Decision Topic
 **Single Azure AI Foundry Resource vs Multiple Foundry Resources**
