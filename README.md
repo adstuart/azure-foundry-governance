@@ -40,14 +40,14 @@ Central AI Subscription
 
 - Single BYOVNet only requires on /24, less IP required
 - All projects in a single Foundry resource can share a PTU Deployment (could also be a disadvantage if worried about noisey neighbour). Note, PTU Reservations (not deployments) CAN be shared across Foundry resources. In all cases you cannot share PTU deployment/reservation across regions.
-- Advantage 3
+- Not strictly an advantage, but worth noting, the Foundry resource itself as a "bucket" is not chargeable. (You pay for the models, agents and tools)
 
 ### Disadvantages
 
 - Max 250 projects in a single Foundry resource
-- Single BYOVNet for agents. All agents reside in same Subnet. Increases reliance on VNet Peering and Firewall transit for agent traffic.
+- You only get a Single BYOVNet for agents if using this private customer VNet model. All agents reside in same Subnet. Increases reliance on VNet Peering and Firewall transit for agent traffic if calling in/out of other VNets.
 - All projects, prior to publishing, share a common managed-identity for agents. (Agents get their own Entra ID if published).
-- All projects share some Foundry level datastores. This has security and chargeback implicatons and complexity. E.g.
+- All projects share some Foundry level datastores/connections. This has security and chargeback implicatons and complexity. E.g.
     - Agent conversations (Cosmos DB) (DB vs container level identity seperation)
     - Vector Stores (AI Search) (Need to pay special attention to RBAC at Index vs Search resource levels)
     - Storage Accounts 
@@ -87,14 +87,19 @@ BU B Subscription
 
 - 250 projects per Foundry resource
 - Adovcated approach in MS Docs. [Baseline Microsoft Foundry chat reference architecture in an Azure landing zone](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone#:~:text=Instead%2C%20this%20architecture%20treats%20the%20workload%20as%20the%20owner%20of%20the%20Foundry%20resource%2C%20which%20is%20the%20recommended%20approach)
-- Advantage 3
+- Each BU gets their own BYOVNet for agents if using this private customer VNet model. Isolation between Agents of differeint BU. If Agent subnet is in same VNet as other BU workloads, no VNet Peering charges.
+- All BU get their own unique shared identity for "work in progress" Agents. I.e. prior to publishing, it is easy to isolate Agent identity. (Agents get their own Entra ID after publishing in all cases)
+-  All projects have their own specific Foundry level datastores/connections. This has security and chargeback benefits, but cost considerations:
+    - Agent conversations (Cosmos DB) (DB vs container level identity seperation) >> Per BU
+    - Vector Stores (AI Search) (Need to pay special attention to RBAC at Index vs Search resource levels) >> Per BU
+    - Storage Accounts >> Per BU
 
 ### Disadvantages
 
 - /24 recommended per VNet in BYOVNet model, run out of IP quickly
 - IP requirement could drive interest in Managed VNet (rather than BYOVNet) and therefore you need to consider how managed VNet hosted agents, reach centralised models (Private endpoints, AI Gateway, Azure Firewall/Managed-VNet etc)
   - Note that Managed VNet uses one Azure Firewall per instance if using outbound FQDN filtering = cost consideration
-- Disadvantage 2
+- Each Foundry resource requires its own PTU deployments (can come from same PTU reservation)
 - Disadvantage 3
 
 ---
