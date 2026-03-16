@@ -106,7 +106,7 @@ BU B Subscription
 
 # So what should I do?
 
-Conclusiona and recommendations
+Conclusion and recommendations
 
 ---
 
