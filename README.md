@@ -6,8 +6,8 @@
 **Single Azure AI Foundry Resource vs Multiple Foundry Resources**
 
 - This document evaluates the architectural decision between deploying **a single Azure AI Foundry resource** or **multiple Foundry resources** across an environment.
-- In both scenarios it is imagined that the requirements are to accomodate both:
-    - a) a central repositry of models and LLM access governed by central IT
+- In both scenarios it is imagined that the requirements are to accommodate both:
+    - a) a central repository of models and LLM access governed by central IT
     - b) areas where individual teams can build out Agent-based workloads
 - The comparison evaluates trade-offs across operational, security, networking, and lifecycle considerations.
 
@@ -35,8 +35,8 @@ Central AI Subscription
 
 ### Advantages
 
-- Single BYOVNet only requires on /24, less IP required
-- All projects in a single Foundry resource can share a PTU Deployment (could also be a disadvantage if worried about noisey neighbour). Note, PTU Reservations (not deployments) CAN be shared across Foundry resources. In all cases you cannot share PTU deployment/reservation across regions.
+- Single BYOVNet only requires one /24, less IP required
+- All projects in a single Foundry resource can share a PTU Deployment (could also be a disadvantage if worried about noisy neighbour). Note, PTU Reservations (not deployments) CAN be shared across Foundry resources. In all cases you cannot share PTU deployment/reservation across regions.
 - Not strictly an advantage, but worth noting, the Foundry resource itself as a "bucket" is not chargeable. (You pay for the models, agents and tools)
 - *Simpler ownership model — a single central IT / cloud platform team can own and govern the Foundry resource, models, and tooling without negotiating boundaries with BUs*
 - *Easier to enforce consistent model governance (approved model list, throughput limits, auditability) from a single control plane*
@@ -47,8 +47,8 @@ Central AI Subscription
 - Max 250 projects in a single Foundry resource
 - You only get a Single BYOVNet for agents if using this private customer VNet model. All agents reside in same Subnet. Increases reliance on VNet Peering and Firewall transit for agent traffic if calling in/out of other VNets.
 - All projects, prior to publishing, share a common managed-identity for agents. (Agents get their own Entra ID if published).
-- All projects share some Foundry level datastores/connections. This has security and chargeback implicatons and complexity. E.g.
-    - Agent conversations (Cosmos DB) (DB vs container level identity seperation)
+- All projects share some Foundry level datastores/connections. This has security and chargeback implications and complexity. E.g.
+    - Agent conversations (Cosmos DB) (DB vs container level identity separation)
     - Vector Stores (AI Search) (Need to pay special attention to RBAC at Index vs Search resource levels)
     - Storage Accounts 
 - *Risk of noisy-neighbour effects across BU projects sharing the same Foundry resource (PTU, datastores, identity) — harder to isolate blast radius*
@@ -88,11 +88,11 @@ BU B Subscription
 ### Advantages
 
 - 250 projects per Foundry resource
-- Adovcated approach in MS Docs. [Baseline Microsoft Foundry chat reference architecture in an Azure landing zone](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone#:~:text=Instead%2C%20this%20architecture%20treats%20the%20workload%20as%20the%20owner%20of%20the%20Foundry%20resource%2C%20which%20is%20the%20recommended%20approach)
-- Each BU gets their own BYOVNet for agents if using this private customer VNet model. Isolation between Agents of differeint BU. If Agent subnet is in same VNet as other BU workloads, no VNet Peering charges.
+- Advocated approach in MS Docs. [Baseline Microsoft Foundry chat reference architecture in an Azure landing zone](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone#:~:text=Instead%2C%20this%20architecture%20treats%20the%20workload%20as%20the%20owner%20of%20the%20Foundry%20resource%2C%20which%20is%20the%20recommended%20approach)
+- Each BU gets their own BYOVNet for agents if using this private customer VNet model. Isolation between Agents of different BU. If Agent subnet is in same VNet as other BU workloads, no VNet Peering charges.
 - All BU get their own unique shared identity for "work in progress" Agents. I.e. prior to publishing, it is easy to isolate Agent identity. (Agents get their own Entra ID after publishing in all cases)
--  All projects have their own specific Foundry level datastores/connections. This has security and chargeback benefits, but cost considerations:
-    - Agent conversations (Cosmos DB) (DB vs container level identity seperation) >> Per BU
+- All projects have their own specific Foundry level datastores/connections. This has security and chargeback benefits, but cost considerations:
+    - Agent conversations (Cosmos DB) (DB vs container level identity separation) >> Per BU
     - Vector Stores (AI Search) (Need to pay special attention to RBAC at Index vs Search resource levels) >> Per BU
     - Storage Accounts >> Per BU
 - *Aligns with federated operating models (e.g., large diversified conglomerates) where BUs have autonomy over their own infrastructure and budgets*
@@ -177,6 +177,51 @@ Central teams provide the **platform and guardrails**, not the agents.
 
 ---
 
+# *Zooming Out — Foundry as Playground vs. Production Deployment*
+
+The Option A vs. B discussion above focuses on Foundry resource topology, but it's important to zoom out and recognise that **Foundry is often used as a development and prototyping environment** — a playground where teams build, test, and evaluate agents before promoting them to production.
+
+When it comes to **production deployment**, the architecture may look completely different. Many enterprises will choose to run their agent code **outside of Foundry entirely**, on their own compute — for example, on an enterprise-grade AKS cluster — while still consuming Foundry-hosted models via API.
+
+```text
+Development / Prototyping              Production
+┌─────────────────────────┐            ┌─────────────────────────┐
+│   Azure AI Foundry      │            │   Enterprise AKS        │
+│   ├── Models            │            │   ├── Agent containers  │
+│   ├── Agent playground  │  ──────►   │   ├── Custom middleware │
+│   └── Evaluation tools  │            │   └── Observability     │
+└─────────────────────────┘            └────────────┬────────────┘
+                                                    │
+                                        ┌───────────▼───────────┐
+                                        │  Foundry Models (via  │
+                                        │  AI Gateway / APIM)   │
+                                        └───────────────────────┘
+```
+
+In this model:
+- **Foundry** remains the control plane for model governance, evaluation, and experimentation
+- **Production agent runtime** lives on your own infrastructure (AKS, App Service, Container Apps, or on-premises), giving you full control over scaling, networking, security, and SLA
+- **Model access** is still governed centrally via AI Gateway / APIM, regardless of where the agent code runs
+
+### Microsoft Agent Framework
+
+The [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/) is an open-source, cross-language (Python and .NET) framework designed for building and orchestrating production-ready AI agents. It is particularly relevant here because:
+
+- **Cloud-agnostic runtime** — agents built with the Agent Framework can run anywhere: AKS, on-premises Kubernetes, VMs, or container services. There is no hard dependency on Foundry for the agent runtime itself
+- **Foundry integration** — while the runtime is portable, agents can still consume Foundry-hosted models, tools, and evaluation capabilities via standard APIs
+- **Production-grade features** — built-in support for multi-agent orchestration, persistent state, human-in-the-loop, OpenTelemetry observability, and type safety — features that enterprises need when moving beyond the playground
+- **Foundry Local** — for scenarios requiring full data sovereignty, Foundry Local allows hosting both the agent runtime and models entirely on your own infrastructure
+
+### Why This Matters for Governance
+
+This "playground vs. production" distinction has direct governance implications:
+
+- The **Foundry topology decision** (Option A vs. B) primarily governs the **development and model access** layer
+- The **production deployment decision** may be governed by entirely different teams (platform engineering, SRE) using different infrastructure patterns
+- Organisations should plan for both — Foundry governance for model access and experimentation, and standard application governance (CI/CD, RBAC, network policies) for the production agent runtime
+
+---
+
 # So what should I do?
 
 Conclusion and recommendations
@@ -215,3 +260,4 @@ Conclusion and recommendations
 - *[AI Gateway landing zone](https://learn.microsoft.com/en-us/ai/playbook/technology-guidance/generative-ai/dev-starters/genai-gateway)*
 - *[APIM AI Gateway capabilities](https://learn.microsoft.com/en-us/azure/api-management/api-management-ai-gateway-overview)*
 - *[Baseline Microsoft Foundry chat reference architecture](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone)*
+- *[Microsoft Agent Framework overview](https://learn.microsoft.com/en-us/agent-framework/overview/)*
