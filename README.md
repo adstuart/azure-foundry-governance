@@ -1,6 +1,17 @@
 # Azure AI Foundry Architecture Decision
 
-**Work in Progress**
+## Contents
+
+- [Decision Topic](#decision-topic)
+- [Options](#options)
+  - [Option A — Single Foundry Resource](#option-a--single-foundry-resource)
+  - [Option B — Multiple Foundry Resources](#option-b--multiple-foundry-resources)
+- [AI Gateway / APIM — Cross-Foundry Model Access](#ai-gateway--apim--cross-foundry-model-access)
+- [Shadow AI / Compliance Controls](#shadow-ai--compliance-controls)
+- [Ownership & Operating Model](#ownership--operating-model)
+- [Zooming Out — Foundry as Playground vs. Production Deployment](#zooming-out--foundry-as-playground-vs-production-deployment)
+- [So what should I do?](#so-what-should-i-do)
+- [Associated links](#associated-links)
 
 ## Decision Topic
 **Single Azure AI Foundry Resource vs Multiple Foundry Resources**
@@ -88,7 +99,7 @@ BU B Subscription
 ### Advantages
 
 - 250 projects per Foundry resource
-- Advocated approach in MS Docs. [Baseline Microsoft Foundry chat reference architecture in an Azure landing zone](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone#:~:text=Instead%2C%20this%20architecture%20treats%20the%20workload%20as%20the%20owner%20of%20the%20Foundry%20resource%2C%20which%20is%20the%20recommended%20approach)
+- Advocated approach in MS Docs. [Baseline Microsoft Foundry chat reference architecture in an Azure landing zone](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone#:~:text=Instead%2C%20this%20architecture%20treats%20the%20workload%20as%20the%20owner%20of%20the%20Foundry%20resource%2C%20which%20is%20the%20recommended%20approach). Also consistent with the [Azure AI Landing Zone](https://azure.github.io/AI-Landing-Zones/) framework and [Cloud Adoption Framework AI Ready guidance](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/ai/ready), which advocate for per-workload resource isolation within application landing zones.
 - Each BU gets their own BYOVNet for agents if using this private customer VNet model. Isolation between Agents of different BU. If Agent subnet is in same VNet as other BU workloads, no VNet Peering charges.
 - All BU get their own unique shared identity for "work in progress" Agents. I.e. prior to publishing, it is easy to isolate Agent identity. (Agents get their own Entra ID after publishing in all cases)
 - All projects have their own specific Foundry level datastores/connections. This has security and chargeback benefits, but cost considerations:
@@ -260,4 +271,6 @@ Conclusion and recommendations
 - *[AI Gateway landing zone](https://learn.microsoft.com/en-us/ai/playbook/technology-guidance/generative-ai/dev-starters/genai-gateway)*
 - *[APIM AI Gateway capabilities](https://learn.microsoft.com/en-us/azure/api-management/api-management-ai-gateway-overview)*
 - *[Baseline Microsoft Foundry chat reference architecture](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone)*
+- *[Azure AI Landing Zones](https://azure.github.io/AI-Landing-Zones/)*
+- *[Cloud Adoption Framework — AI Ready](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/ai/ready)*
 - *[Microsoft Agent Framework overview](https://learn.microsoft.com/en-us/agent-framework/overview/)*
