@@ -21,7 +21,6 @@
     - a) a central repository of models and LLM access governed by central IT
     - b) areas where individual teams can build out Agent-based workloads
 - The comparison evaluates trade-offs across operational, security, networking, and lifecycle considerations.
-- In larger organisations, consider pairing the Foundry topology decision with [Azure API Center](https://learn.microsoft.com/en-us/azure/api-center/overview) as a **central AI catalogue** — a single registry where all models, APIs, and agent endpoints are discoverable, regardless of which Foundry resource hosts them. This provides the "what have we got?" visibility that complements the governance controls discussed below.
 
 > NB. This is focused on Microsoft Foundry as of March 2026. Not the older AI Foundry with the concept of Hubs etc. See https://journeyofthegeek.com/2026/02/22/microsoft-foundry-the-evolution-revisited/
 
