@@ -192,16 +192,16 @@ Central teams provide the **platform and guardrails**, not the agents.
 
 The Option A vs. B discussion above focuses on Foundry resource topology, but it's important to zoom out and recognise that **Foundry is often used as a development and prototyping environment** — a playground where teams build, test, and evaluate agents before promoting them to production.
 
-When it comes to **production deployment**, the architecture may look completely different. Many enterprises will choose to run their agent code **outside of Foundry entirely**, on their own compute — for example, on an enterprise-grade AKS cluster — while still consuming Foundry-hosted models via API.
+When it comes to **production deployment**, the architecture may look completely different. Many enterprises will choose to run their agent code **outside of Foundry entirely**, on their own compute — for example, on an enterprise-grade AKS cluster — while still consuming Foundry-hosted models via API. To make this transition, you need a framework that lets you take agent code developed in the Foundry playground and run it on your own infrastructure. The [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/) is designed for exactly this — it's an open-source, cross-language (Python and .NET) runtime for building and orchestrating production-ready AI agents, with no hard dependency on Foundry itself. You deploy it on your AKS cluster (or other compute), and it handles multi-agent orchestration, persistent state, observability (via OpenTelemetry), and human-in-the-loop — the production-grade capabilities that the Foundry playground doesn't provide.
 
 ```text
 Development / Prototyping              Production
-┌─────────────────────────┐            ┌─────────────────────────┐
-│   Azure AI Foundry      │            │   Enterprise AKS        │
-│   ├── Models            │            │   ├── Agent containers  │
-│   ├── Agent playground  │  ──────►   │   ├── Custom middleware │
-│   └── Evaluation tools  │            │   └── Observability     │
-└─────────────────────────┘            └────────────┬────────────┘
+┌─────────────────────────┐            ┌──────────────────────────────┐
+│   Azure AI Foundry      │            │   Enterprise AKS             │
+│   ├── Models            │            │   ├── Agent Framework runtime│
+│   ├── Agent playground  │  ──────►   │   ├── Agent containers       │
+│   └── Evaluation tools  │            │   └── Observability          │
+└─────────────────────────┘            └────────────┬─────────────────┘
                                                     │
                                         ┌───────────▼───────────┐
                                         │  Foundry Models (via  │
@@ -211,17 +211,9 @@ Development / Prototyping              Production
 
 In this model:
 - **Foundry** remains the control plane for model governance, evaluation, and experimentation
-- **Production agent runtime** lives on your own infrastructure (AKS, App Service, Container Apps, or on-premises), giving you full control over scaling, networking, security, and SLA
+- **Production agent runtime** lives on your own infrastructure (AKS, App Service, Container Apps, or on-premises) using the Microsoft Agent Framework, giving you full control over scaling, networking, security, and SLA
 - **Model access** is still governed centrally via AI Gateway / APIM, regardless of where the agent code runs
-
-### Microsoft Agent Framework
-
-The [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/) is an open-source, cross-language (Python and .NET) framework designed for building and orchestrating production-ready AI agents. It is particularly relevant here because:
-
-- **Cloud-agnostic runtime** — agents built with the Agent Framework can run anywhere: AKS, on-premises Kubernetes, VMs, or container services. There is no hard dependency on Foundry for the agent runtime itself
-- **Foundry integration** — while the runtime is portable, agents can still consume Foundry-hosted models, tools, and evaluation capabilities via standard APIs
-- **Production-grade features** — built-in support for multi-agent orchestration, persistent state, human-in-the-loop, OpenTelemetry observability, and type safety — features that enterprises need when moving beyond the playground
-- **Foundry Local** — for scenarios requiring full data sovereignty, Foundry Local allows hosting both the agent runtime and models entirely on your own infrastructure
+- For scenarios requiring full data sovereignty, **Foundry Local** allows hosting both the Agent Framework runtime and models entirely on your own infrastructure
 
 ### Why This Matters for Governance
 
