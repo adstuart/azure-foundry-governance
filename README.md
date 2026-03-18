@@ -133,7 +133,7 @@ BU Foundry Instance ──► Azure API Management (AI Gateway) ──► Centra
 
 ### Key Considerations
 
-- **APIM as enforcement & observability layer** — rate limiting, token metering, logging, and policy enforcement sit in APIM, consistent with how enterprises already govern APIs
+- **APIM as enforcement & observability layer** — rate limiting, token metering, logging, and policy enforcement sit in APIM, consistent with how enterprises already govern APIs. APIM also provides AI-specific capabilities such as **semantic caching** (reducing cost and latency for repeated queries) and **prompt injection filtering** (content safety at the gateway level before requests reach model endpoints).
 - **Private APIM** — required for private-network deployments; requires Premium tier with associated cost
 - **Networking** — Private endpoints from BU VNets/Managed VNets to APIM, plus APIM to central Foundry model endpoints. Consider failover, latency, and cross-region implications
 - **Scaling** — AI agent workloads can generate high volumes of API calls; APIM capacity planning is critical
@@ -266,3 +266,5 @@ Conclusion and recommendations
 - *[Azure AI Landing Zones](https://azure.github.io/AI-Landing-Zones/)*
 - *[Cloud Adoption Framework — AI Ready](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/ai/ready)*
 - *[Microsoft Agent Framework overview](https://learn.microsoft.com/en-us/agent-framework/overview/)*
+- *[Foundry Citadel Platform — end-to-end governance guidance](https://aka.ms/foundry-citadel)*
+- *[Azure API Center overview](https://learn.microsoft.com/en-us/azure/api-center/overview)*
