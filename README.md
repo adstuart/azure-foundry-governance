@@ -99,7 +99,7 @@ BU B Subscription
 ### Advantages
 
 - 250 projects per Foundry resource
-- Advocated approach in MS Docs.[Baseline Microsoft Foundry chat reference architecture in an Azure landing zone](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone#:~:text=Instead%2C%20this%20architecture%20treats%20the%20workload%20as%20the%20owner%20of%20the%20Foundry%20resource%2C%20which%20is%20the%20recommended%20approach). Also consistent with the [Azure AI Landing Zone](https://azure.github.io/AI-Landing-Zones/) framework and [Cloud Adoption Framework AI Ready guidance](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/ai/ready), which advocate for per-workload resource isolation within application landing zones.
+- Advocated approach in MS Docs. The [Foundry Rollout and Planning guidance](https://learn.microsoft.com/en-us/azure/foundry/concepts/planning) explicitly recommends: *"Create a separate Foundry resource for each business group. Align deployments with logical boundaries such as data domains or business functions to ensure autonomy, governance, and cost tracking."* The [Baseline Microsoft Foundry chat reference architecture in an Azure landing zone](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone) reinforces this, stating: *"Because of resource organization factors, and cost allocation limitations, we don't recommend this topology [shared Foundry resource]. Instead, this architecture treats the workload as the owner of the Foundry resource, which is the recommended approach."* Also consistent with the [Azure AI Landing Zone](https://azure.github.io/AI-Landing-Zones/) framework and [Cloud Adoption Framework AI Ready guidance](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/ai/ready), which advocate for per-workload resource isolation within application landing zones.
 - Each BU gets their own BYOVNet for agents if using this private customer VNet model. Isolation between Agents of different BU. If Agent subnet is in same VNet as other BU workloads, no VNet Peering charges.
 - All BU get their own unique shared identity for "work in progress" Agents. I.e. prior to publishing, it is easy to isolate Agent identity. (Agents get their own [Entra Agent ID](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity) after publishing in all cases)
 - All projects have their own specific Foundry level datastores/connections. This has security and chargeback benefits, but cost considerations:
@@ -260,6 +260,8 @@ Conclusion and recommendations
 # Associated links
 
 - Foundry limits https://learn.microsoft.com/en-us/azure/foundry/foundry-models/quotas-limits
+- *[Foundry Architecture concepts](https://learn.microsoft.com/en-us/azure/foundry/concepts/architecture)*
+- *[Foundry Rollout and Planning guidance](https://learn.microsoft.com/en-us/azure/foundry/concepts/planning)*
 - *[AI Gateway landing zone](https://learn.microsoft.com/en-us/ai/playbook/technology-guidance/generative-ai/dev-starters/genai-gateway)*
 - *[APIM AI Gateway capabilities](https://learn.microsoft.com/en-us/azure/api-management/api-management-ai-gateway-overview)*
 - *[Baseline Microsoft Foundry chat reference architecture](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/architecture/baseline-microsoft-foundry-landing-zone)*
