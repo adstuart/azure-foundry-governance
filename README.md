@@ -13,6 +13,32 @@
 - [So what should I do?](#so-what-should-i-do)
 - [Associated links](#associated-links)
 
+## Overview
+
+```mermaid
+graph TD
+    DEC{Azure AI Foundry<br/>Architecture Decision}
+    
+    DEC -->|Option A| SINGLE[Single Foundry Resource]
+    DEC -->|Option B| MULTI[Multiple Foundry Resources]
+    
+    SINGLE --> S1[Simpler networking]
+    SINGLE --> S2[Shared PTU deployments]
+    SINGLE --> S3[Fewer IP addresses]
+    
+    MULTI --> M1[BU isolation]
+    MULTI --> M2[Clean chargeback]
+    MULTI --> M3[Per-BU identity]
+    
+    MULTI -->|Requires| GW[🔌 AI Gateway / APIM]
+    GW --> MODELS[Central Model Catalogue]
+    
+    style DEC fill:#f9a825,stroke:#f57f17,color:#333
+    style SINGLE fill:#0078d4,stroke:#005a9e,color:#fff
+    style MULTI fill:#4caf50,stroke:#388e3c,color:#fff
+    style GW fill:#ff9800,stroke:#f57c00,color:#fff
+```
+
 ## Decision Topic
 **Single Azure AI Foundry Resource vs Multiple Foundry Resources**
 
