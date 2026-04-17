@@ -3,6 +3,7 @@
 ## Contents
 
 - [Decision Topic](#decision-topic)
+- [The Foundry resource is the real security boundary](#the-foundry-resource-is-the-real-security-boundary)
 - [Options](#options)
   - [Option A — Single Foundry Resource](#option-a--single-foundry-resource)
   - [Option B — Multiple Foundry Resources](#option-b--multiple-foundry-resources)
@@ -49,6 +50,28 @@ graph TD
 - The comparison evaluates trade-offs across operational, security, networking, and lifecycle considerations.
 
 > NB. This is focused on Microsoft Foundry as of March 2026. Not the older AI Foundry with the concept of Hubs etc. See https://journeyofthegeek.com/2026/02/22/microsoft-foundry-the-evolution-revisited/
+
+---
+
+## The Foundry resource is the real security boundary
+
+This is the single most important concept for this decision, and it is where the guidance has evolved:
+
+- **The Foundry resource — not the project — is the security and authorization boundary.** Data plane RBAC for embeddings, chat, agents, and inference applies **only at the Foundry resource level**.
+- **Foundry projects are control plane only.** They help with studio access, collaboration, and asset organization, but they do **not** provide runtime isolation between workloads.
+- **Any identity with data plane access to a Foundry resource can reach all deployments in that resource.** If workloads are co-located in one Foundry, least privilege cannot be enforced between them via projects.
+
+### What this means for the decision
+
+- **Multiple Foundry instances (Option B) are the recommended default** when you need security isolation, regulatory separation, clear governance boundaries, or independent quota and cost control.
+- **Single Foundry with multiple projects (Option A) is still supported**, but it fits only lighter, centralized use cases where workload isolation is explicitly acceptable.
+- **For regulated industries (financial services, healthcare, public sector), Option B is effectively the only defensible design** given the current RBAC and data plane model.
+
+### How to think about projects now
+
+- Use projects for **organization and lifecycle** (e.g. DEV / TEST / PROD, team collaboration, asset grouping).
+- Do **not** use projects for **security or inference isolation** — the resource boundary is what enforces that.
+- When a Foundry resource maps one-to-one with a workload, projects still add value for structure — just not for access control.
 
 ---
 
@@ -255,24 +278,29 @@ This "playground vs. production" distinction has direct governance implications:
 
 Conclusion and recommendations
 
-*There is no single "right" answer — the best choice depends on your organisation's size, regulatory posture, operating model, and AI maturity. The goal is to **choose with eyes open**, understanding the trade-offs.*
+*There is no single "right" answer — but the default has shifted. **For most enterprises, Option B (multiple Foundry resources) is now the recommended starting point**, because the Foundry resource is the real security and authorization boundary. Option A remains valid where shared access and weaker isolation are explicitly acceptable.*
 
-### *Lean toward Option A (Single Foundry) if:*
+### *Default to Option B (Multiple Foundry Resources) if any of the following apply:*
+
+- *You have **regulatory or compliance obligations** (financial services, healthcare, public sector) — Option B is effectively the only defensible design*
+- *You need **security isolation between workloads** — data plane RBAC only applies at the resource level, so co-located workloads cannot enforce least privilege*
+- *You have **semi-autonomous BUs** with their own subscriptions, identities, or budgets*
+- ***Chargeback clarity** is a hard requirement — each BU needs clean cost attribution*
+- *You need **independent quota and cost control** per workload*
+- *You expect to **scale beyond 250 projects** or want headroom for growth*
+- *Your workloads have **different data residency or compliance requirements***
+
+### *Option A (Single Foundry) fits only if all of the following are true:*
 
 - *You have a **small number of teams** building AI workloads (well under the 250 project limit)*
+- *You **explicitly accept** that any identity with data plane access can reach all deployments in the resource*
+- *Workloads are **low sensitivity** and do not need security isolation from each other*
 - *Your organisation has a **strong central IT culture** with a single team governing cloud infrastructure*
-- *You want to **minimise infrastructure complexity** and networking overhead*
+- *You want to **minimise infrastructure complexity** and networking overhead (single BYOVNet, fewer private endpoints)*
 - ***IP address space** is constrained and you want to limit BYOVNet /24 consumption*
 - *You are in **early stages of AI adoption** and want to start simple before scaling out*
 
-### *Lean toward Option B (Multiple Foundry Resources) if:*
-
-- *You are a **large or diversified organisation** with semi-autonomous BUs (each with their own subscriptions and budgets)*
-- *You need **strong isolation** between BU workloads (identity, networking, datastores)*
-- ***Chargeback clarity** is a hard requirement — each BU needs clean cost attribution*
-- *You expect to **scale beyond 250 projects** or want headroom for growth*
-- *Your BUs have **different compliance or data residency requirements** that benefit from separate Foundry instances*
-- *You are willing to invest in **AI Gateway / APIM infrastructure** to bridge central models to distributed Foundry instances*
+*In short: Option A is a deliberate choice to trade isolation for simplicity, not a safe default.*
 
 ### *In all cases:*
 
